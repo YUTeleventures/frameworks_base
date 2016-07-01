@@ -256,7 +256,6 @@ final class DefaultPermissionGrantPolicy {
                     setupIntent, userId);
             if (setupPackage != null
                     && doesPackageSupportRuntimePermissions(setupPackage)) {
-                grantRuntimePermissionsLPw(setupPackage, PHONE_PERMISSIONS, true, userId);
                 grantRuntimePermissionsLPw(setupPackage, CONTACTS_PERMISSIONS, userId);
             }
 
