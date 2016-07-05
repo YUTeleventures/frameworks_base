@@ -493,7 +493,6 @@ final class DefaultPermissionGrantPolicy {
             if (browserPackage != null
                     && doesPackageSupportRuntimePermissions(browserPackage)) {
                 grantRuntimePermissionsLPw(browserPackage, LOCATION_PERMISSIONS, userId);
-                grantRuntimePermissionsLPw(browserPackage, STORAGE_PERMISSIONS, userId);
             }
 
             // IME
@@ -722,7 +721,6 @@ final class DefaultPermissionGrantPolicy {
             grantRuntimePermissionsLPw(smsPackage, CONTACTS_PERMISSIONS, userId);
             grantRuntimePermissionsLPw(smsPackage, PHONE_PERMISSIONS, userId);
             grantRuntimePermissionsLPw(smsPackage, SMS_PERMISSIONS, userId);
-            grantRuntimePermissionsLPw(smsPackage, STORAGE_PERMISSIONS, true, userId);
         }
     }
 
