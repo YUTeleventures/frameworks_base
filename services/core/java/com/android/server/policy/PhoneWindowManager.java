@@ -1288,6 +1288,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mHandler.sendEmptyMessage(MSG_DISPATCH_SHOW_GLOBAL_ACTIONS);
     }
 
+    Runnable mBackLongPress = new Runnable() {
+        public void run() {
+            if (!unpinActivity(false)) {
+                performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
+            }
+        }
+    };
+
     void showGlobalActionsInternal() {
         sendCloseSystemWindows(SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS);
         if (mGlobalActions == null) {
@@ -2873,6 +2881,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mPendingMetaAction = false;
         }
 
+        if (keyCode == KeyEvent.KEYCODE_BACK && !down) {
+            mHandler.removeCallbacks(mBackLongPress);
+        }
+
         // First we always handle the home key here, so applications
         // can never break it, although if keyguard is on, we do let
         // it handle it, because that gives us the correct 5 second
@@ -3177,6 +3189,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 launchAssistAction(Intent.EXTRA_ASSIST_INPUT_HINT_KEYBOARD, event.getDeviceId());
             }
             return -1;
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (unpinActivity(true)) {
+                 if (down && repeatCount == 0) {
+			mHandler.postDelayed(mBackLongPress, 2000);
+		}
+            }
         }
 
         // Shortcuts are invoked through Search+key, so intercept those here
@@ -3292,6 +3310,22 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         // Let the application handle the key.
         return 0;
+    }
+
+    private boolean unpinActivity(boolean checkOnly) {
+        if (!hasNavigationBar()) {
+            try {
+                if (ActivityManagerNative.getDefault().isInLockTaskMode()) {
+                   if (!checkOnly) {
+                       ActivityManagerNative.getDefault().stopLockTaskModeOnCurrent();
+                   }
+                   return true;
+                }
+            } catch (RemoteException e) {
+            // ignore
+            }
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
