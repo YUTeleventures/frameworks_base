@@ -224,16 +224,15 @@ public class ScreenPinningRequest implements View.OnClickListener {
                 description = mAccessibilityService.isEnabled()
                         ? R.string.screen_pinning_description_accessible
                         : R.string.screen_pinning_description;
-                final int backBgVis =
-                    mAccessibilityService.isEnabled() ? View.INVISIBLE : View.VISIBLE;
-                mLayout.findViewById(R.id.screen_pinning_back_bg).setVisibility(backBgVis);
-                mLayout.findViewById(R.id.screen_pinning_back_bg_light).setVisibility(backBgVis);
             } else {
                     description = R.string.screen_pinning_description_no_navbar;
-                    ((ViewGroup) buttons.getParent()).removeView(buttons);
             }
             ((TextView) mLayout.findViewById(R.id.screen_pinning_description))
                     .setText(description);
+            final int backBgVisibility =
+                    mAccessibilityService.isEnabled() ? View.INVISIBLE : View.VISIBLE;
+            mLayout.findViewById(R.id.screen_pinning_back_bg).setVisibility(backBgVisibility);
+            mLayout.findViewById(R.id.screen_pinning_back_bg_light).setVisibility(backBgVisibility);
 
             addView(mLayout, getRequestLayoutParams(isLandscape));
         }
